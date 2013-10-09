@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 def home(request):
 	categorias = Categoria.objects.all()
-	enlaces = Enlace.objects.all()
+	enlaces = Enlace.objects.order_by("-votos").all()
 	template = "index.html"
 	#diccionario = {"categorias": categorias, "enlaces": enlaces}
 	return render_to_response(template, locals())
@@ -39,11 +39,13 @@ def plus(request, id_enlace):
 	return HttpResponseRedirect("/")
 @login_required
 def add(request):
-	categorias = Categoria.objects.all()
+	#categorias = Categoria.objects.all()
 	if request.method == "POST":
 		form = EnlaceForm(request.POST)
 		if form.is_valid():
-			form.save()
+			enlace = form.save(commit = False)
+			enlace.usuario = request.user
+			enlace.save()
 			return HttpResponseRedirect("/")
 	else:
 		form = EnlaceForm()

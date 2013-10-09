@@ -5,4 +5,4 @@ from models import *
 class EnlaceForm(ModelForm):
 	class Meta:
 		model = Enlace
-		exclude = ("votos",)
+		exclude = ("votos","usuario")
